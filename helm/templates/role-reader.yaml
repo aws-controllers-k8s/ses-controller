@@ -9,6 +9,9 @@ rules:
 - apiGroups:
   - ses.services.k8s.aws
   resources:
+  - configurationsets
+  - receiptrules
+  - receiptrulesets
   verbs:
   - get
   - list

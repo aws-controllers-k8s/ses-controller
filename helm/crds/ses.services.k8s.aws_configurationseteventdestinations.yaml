@@ -1,0 +1,224 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.16.2
+  name: configurationseteventdestinations.ses.services.k8s.aws
+spec:
+  group: ses.services.k8s.aws
+  names:
+    kind: ConfigurationSetEventDestination
+    listKind: ConfigurationSetEventDestinationList
+    plural: configurationseteventdestinations
+    singular: configurationseteventdestination
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ConfigurationSetEventDestination is the Schema for the ConfigurationSetEventDestinations
+          API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ConfigurationSetEventDestinationSpec defines the desired
+              state of ConfigurationSetEventDestination.
+            properties:
+              configurationSetName:
+                description: |-
+                  The name of the configuration set that the event destination should be associated
+                  with.
+                type: string
+              configurationSetRef:
+                description: "AWSResourceReferenceWrapper provides a wrapper around
+                  *AWSResourceReference\ntype to provide more user friendly syntax
+                  for references using 'from' field\nEx:\nAPIIDRef:\n\n\tfrom:\n\t
+                  \ name: my-api"
+                properties:
+                  from:
+                    description: |-
+                      AWSResourceReference provides all the values necessary to reference another
+                      k8s resource for finding the identifier(Id/ARN/Name)
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    type: object
+                type: object
+              eventDestination:
+                description: |-
+                  An object that describes the Amazon Web Services service that email sending
+                  event where information is published.
+                properties:
+                  cloudWatchDestination:
+                    description: |-
+                      Contains information associated with an Amazon CloudWatch event destination
+                      to which email sending events are published.
+
+                      Event destinations, such as Amazon CloudWatch, are associated with configuration
+                      sets, which enable you to publish email sending events. For information about
+                      using configuration sets, see the Amazon SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/monitor-sending-activity.html).
+                    properties:
+                      dimensionConfigurations:
+                        items:
+                          description: |-
+                            Contains the dimension configuration to use when you publish email sending
+                            events to Amazon CloudWatch.
+
+                            For information about publishing email sending events to Amazon CloudWatch,
+                            see the Amazon SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/monitor-sending-activity.html).
+                          properties:
+                            defaultDimensionValue:
+                              type: string
+                            dimensionName:
+                              type: string
+                            dimensionValueSource:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  enabled:
+                    type: boolean
+                  kinesisFirehoseDestination:
+                    description: |-
+                      Contains the delivery stream ARN and the IAM role ARN associated with an
+                      Amazon Kinesis Firehose event destination.
+
+                      Event destinations, such as Amazon Kinesis Firehose, are associated with
+                      configuration sets, which enable you to publish email sending events. For
+                      information about using configuration sets, see the Amazon SES Developer
+                      Guide (https://docs.aws.amazon.com/ses/latest/dg/monitor-sending-activity.html).
+                    properties:
+                      deliveryStreamARN:
+                        type: string
+                      iamRoleARN:
+                        type: string
+                    type: object
+                  matchingEventTypes:
+                    items:
+                      type: string
+                    type: array
+                  name:
+                    type: string
+                  snsDestination:
+                    description: |-
+                      Contains the topic ARN associated with an Amazon Simple Notification Service
+                      (Amazon SNS) event destination.
+
+                      Event destinations, such as Amazon SNS, are associated with configuration
+                      sets, which enable you to publish email sending events. For information about
+                      using configuration sets, see the Amazon SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/monitor-sending-activity.html).
+                    properties:
+                      topicARN:
+                        type: string
+                      topicRef:
+                        description: Reference field for TopicARN
+                        properties:
+                          from:
+                            description: |-
+                              AWSResourceReference provides all the values necessary to reference another
+                              k8s resource for finding the identifier(Id/ARN/Name)
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            type: object
+                        type: object
+                    type: object
+                type: object
+            required:
+            - eventDestination
+            type: object
+          status:
+            description: ConfigurationSetEventDestinationStatus defines the observed
+              state of ConfigurationSetEventDestination
+            properties:
+              ackResourceMetadata:
+                description: |-
+                  All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
+                  that is used to contain resource sync state, account ownership,
+                  constructed ARN for the resource
+                properties:
+                  arn:
+                    description: |-
+                      ARN is the Amazon Resource Name for the resource. This is a
+                      globally-unique identifier and is set only by the ACK service controller
+                      once the controller has orchestrated the creation of the resource OR
+                      when it has verified that an "adopted" resource (a resource where the
+                      ARN annotation was set by the Kubernetes user on the CR) exists and
+                      matches the supplied CR's Spec field values.
+                      https://github.com/aws/aws-controllers-k8s/issues/270
+                    type: string
+                  ownerAccountID:
+                    description: |-
+                      OwnerAccountID is the AWS Account ID of the account that owns the
+                      backend AWS service API resource.
+                    type: string
+                  region:
+                    description: Region is the AWS region in which the resource exists
+                      or will exist.
+                    type: string
+                required:
+                - ownerAccountID
+                - region
+                type: object
+              conditions:
+                description: |-
+                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  contains a collection of `ackv1alpha1.Condition` objects that describe
+                  the various terminal states of the CR and its backend AWS service API
+                  resource
+                items:
+                  description: |-
+                    Condition is the common struct used by all CRDs managed by ACK service
+                    controllers to indicate terminal states  of the CR and its backend AWS
+                    service API resource
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition.
+                      type: string
+                    reason:
+                      description: The reason for the condition's last transition.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type is the type of the Condition
+                      type: string
+                  required:
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

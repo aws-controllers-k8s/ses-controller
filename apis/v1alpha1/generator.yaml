@@ -1,10 +1,217 @@
 ignore:
   resource_names:
-  - ConfigurationSet
-  - ConfigurationSetEventDestination
+#  - ConfigurationSet
+#  - ConfigurationSetEventDestination
   - CustomVerificationEmailTemplate
-  - ReceiptFilter
-  - ReceiptRule
-  - ReceiptRuleSet
-  - Template
+#  - ReceiptFilter
+#  - ReceiptRule
+#  - ReceiptRuleSet
+#  - Template
+
+  field_paths:
+    - CreateConfigurationSetInput.ConfigurationSet
+    - CreateTemplateInput.Template
+    - CreateReceiptFilterInput.Filter.Name
 model_name: email
+
+operations:
+  DescribeConfigurationSet:
+    operation_type:
+      - Get
+    resource_name: ConfigurationSetEventDestination
+
+resources:
+  ConfigurationSet:
+    fields:
+      Name:
+        is_primary_key: true
+        is_immutable: true
+        type: string
+    list_operation:
+      match_fields:
+        - Name
+    update_operation:
+      custom_method_name: customUpdate
+    renames:
+      operations:
+        DescribeConfigurationSet:
+          input_fields:
+            ConfigurationSetName: Name
+        DeleteConfigurationSet:
+          input_fields:
+            ConfigurationSetName: Name
+    tags:
+      ignore: true
+    exceptions:
+      terminal_codes:
+        - ConfigurationSetAlreadyExists
+        - InvalidConfigurationSet
+    hooks:
+      sdk_create_post_build_request:
+        template_path: hooks/configuration_set/sdk_create_post_build_request.go.tpl
+      sdk_read_one_post_request:
+        template_path: hooks/configuration_set/sdk_read_one_post_request.go.tpl
+
+  ReceiptRuleSet:
+    fields:
+      RuleSetName:
+        is_primary_key: true
+        is_immutable: true
+    update_operation:
+      custom_method_name: customUpdate
+    tags:
+      ignore: true
+    exceptions:
+      terminal_codes:
+        - AlreadyExists
+    hooks:
+      sdk_read_one_post_request:
+        template_path: hooks/receipt_rule_set/sdk_read_one_post_request.go.tpl
+
+  ReceiptRule:
+    find_operation:
+      custom_method_name: customFind
+    fields:
+      Rule.Name:
+        is_immutable: true
+        is_required: true
+      RuleSetName:
+        is_primary_key: true
+        is_immutable: true
+        is_required: true
+        references:
+          resource: ReceiptRuleSet
+          path: Spec.RuleSetName
+    tags:
+      ignore: true
+    exceptions:
+      terminal_codes:
+        - AlreadyExists
+        - InvalidLambdaFunction
+        - InvalidS3Configuration
+        - InvalidSnsTopic
+        - RuleSetDoesNotExist
+    hooks:
+      sdk_file_end:
+        template_path: hooks/receipt_rule/sdk_file_end.go.tpl
+      sdk_delete_post_build_request:
+        template_path: hooks/receipt_rule/sdk_delete_post_build_request.go.tpl
+
+  Template:
+    fields:
+      Name:
+        type: string
+        is_primary_key: true
+        is_immutable: true
+      HTMLPart:
+        type: string
+      SubjectPart:
+        type: string
+      TextPart:
+        type: string
+    tags:
+      ignore: true
+    exceptions:
+      terminal_codes:
+        - AlreadyExists
+        - InvalidTemplate
+    renames:
+      operations:
+        GetTemplate:
+          input_fields:
+            TemplateName: Name
+          output_fields:
+            HtmlPart: HTMLPart
+        DeleteTemplate:
+          input_fields:
+            TemplateName: Name
+    hooks:
+      sdk_create_post_build_request:
+        template_path: hooks/template/sdk_create_post_build_request.go.tpl
+      sdk_read_one_post_request:
+        template_path: hooks/template/sdk_read_one_post_request.go.tpl
+      sdk_update_post_build_request:
+        template_path: hooks/template/sdk_update_post_build_request.go.tpl
+
+  ReceiptFilter:
+    list_operation:
+      match_fields:
+        - Name
+    find_operation:
+      custom_method_name: customFind
+    update_operation:
+      custom_method_name: customUpdate
+    fields:
+      Name:
+        is_primary_key: true
+        is_immutable: true
+        is_required: true
+        type: string
+      Filter.IPFilter.CIDR:
+        is_immutable: true
+      Filter.IPFilter.Policy:
+        is_immutable: true
+    tags:
+      ignore: true
+    exceptions:
+      terminal_codes:
+        - AlreadyExists
+    renames:
+      operations:
+        CreateReceiptFilter:
+          input_fields:
+            Filter.Name: Name
+            Name: Filter.Name
+        DeleteReceiptFilter:
+          input_fields:
+            FilterName: Name
+    hooks:
+      sdk_file_end:
+        template_path: hooks/receipt_filter/sdk_file_end.go.tpl
+      sdk_create_post_build_request:
+        template_path: hooks/receipt_filter/sdk_create_post_build_request.go.tpl
+      sdk_read_many_post_request:
+        template_path: hooks/receipt_filter/sdk_read_many_post_request.go.tpl
+
+  ConfigurationSetEventDestination:
+    fields:
+      ConfigurationSetName:
+        is_primary_key: true
+        is_immutable: true
+        references:
+          resource: ConfigurationSet
+          path: Spec.Name
+      EventDestination.Name:
+        is_required: true
+        is_immutable: true
+      EventDestination.MatchingEventTypes:
+        is_required: true
+      EventDestination.SNSDestination.TopicARN:
+        is_required: true
+        references:
+          service_name: sns
+          resource: Topic
+          path: Status.TopicARN
+    tags:
+      ignore: true
+    exceptions:
+      terminal_codes:
+        - ConfigurationSetDoesNotExist
+        - EventDestinationAlreadyExists
+        - InvalidCloudWatchDestination
+        - InvalidFirehoseDestination
+        - InvalidSNSDestination
+        - LimitExceeded
+    hooks:
+      sdk_read_one_post_request:
+        template_path: hooks/configuration_set_event_destination/sdk_read_one_post_request.go.tpl
+      sdk_read_one_pre_build_request:
+        template_path: hooks/configuration_set_event_destination/sdk_read_one_pre_build_request.go.tpl
+      sdk_read_one_post_build_request:
+        template_path: hooks/configuration_set_event_destination/sdk_read_one_post_build_request.go.tpl
+      sdk_read_one_post_set_output:
+        template_path: hooks/configuration_set_event_destination/sdk_read_one_post_set_output.go.tpl
+      sdk_delete_post_build_request:
+        template_path: hooks/configuration_set_event_destination/sdk_delete_post_build_request.go.tpl
+      sdk_file_end:
+        template_path: hooks/configuration_set_event_destination/sdk_file_end.go.tpl

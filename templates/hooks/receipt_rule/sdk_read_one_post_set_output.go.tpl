@@ -1,0 +1,1 @@
+    setReceiptRule(ko, resp)

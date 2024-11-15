@@ -1,0 +1,6 @@
+apiVersion: ses.services.k8s.aws/v1alpha1
+kind: ConfigurationSet
+metadata:
+  name: $CONFIGURATION_SET_NAME
+spec:
+  name: $CONFIGURATION_SET_NAME

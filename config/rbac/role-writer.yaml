@@ -9,6 +9,11 @@ rules:
 - apiGroups:
   - ses.services.k8s.aws
   resources:
+  - configurationsets
+  - receiptfilters
+  - receiptrules
+  - receiptrulesets
+  - templates
   verbs:
   - create
   - delete
@@ -20,6 +25,11 @@ rules:
 - apiGroups:
   - ses.services.k8s.aws
   resources:
+  - configurationsets
+  - receiptfilters
+  - receiptrules
+  - receiptrulesets
+  - templates
   verbs:
   - get
   - patch

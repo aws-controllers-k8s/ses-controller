@@ -91,6 +91,34 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - ses.services.k8s.aws
+  resources:
+  - configurationsets
+  - receiptfilters
+  - receiptrules
+  - receiptrulesets
+  - templates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ses.services.k8s.aws
+  resources:
+  - configurationsets/status
+  - receiptfilters/status
+  - receiptrules/status
+  - receiptrulesets/status
+  - templates/status
+  verbs:
+  - get
+  - patch
+  - update
 {{- end }}
 
 {{/* Convert k/v map to string like: "key1=value1,key2=value2,..." */}}

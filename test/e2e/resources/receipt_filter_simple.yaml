@@ -1,0 +1,10 @@
+apiVersion: ses.services.k8s.aws/v1alpha1
+kind: ReceiptFilter
+metadata:
+  name: $RECEIPT_FILTER_NAME
+spec:
+  name: $RECEIPT_FILTER_NAME
+  filter:
+    ipFilter:
+      cidr: "192.168.0.1/32"
+      policy: Allow

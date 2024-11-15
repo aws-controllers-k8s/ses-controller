@@ -39,6 +39,9 @@ import (
 	svcresource "github.com/aws-controllers-k8s/ses-controller/pkg/resource"
 	svcsdk "github.com/aws/aws-sdk-go/service/ses"
 
+	_ "github.com/aws-controllers-k8s/ses-controller/pkg/resource/configuration_set"
+	_ "github.com/aws-controllers-k8s/ses-controller/pkg/resource/receipt_rule_set"
+
 	"github.com/aws-controllers-k8s/ses-controller/pkg/version"
 )
 

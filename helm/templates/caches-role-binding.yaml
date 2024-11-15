@@ -8,7 +8,7 @@ roleRef:
   name: ack-namespaces-cache-ses-controller
 subjects:
 - kind: ServiceAccount
-  name: ack-ses-controller
+  name: {{ include "ack-ses-controller.service-account.name" . }}
   namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -22,5 +22,5 @@ roleRef:
   name: ack-configmaps-cache-ses-controller
 subjects:
 - kind: ServiceAccount
-  name: ack-ses-controller
+  name: {{ include "ack-ses-controller.service-account.name" . }}
   namespace: {{ .Release.Namespace }}

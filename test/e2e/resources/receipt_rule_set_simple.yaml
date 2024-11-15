@@ -1,0 +1,6 @@
+apiVersion: ses.services.k8s.aws/v1alpha1
+kind: ReceiptRuleSet
+metadata:
+  name: $RECEIPT_RULE_SET_NAME
+spec:
+  ruleSetName: $RECEIPT_RULE_SET_NAME

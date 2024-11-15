@@ -1,0 +1,9 @@
+apiVersion: ses.services.k8s.aws/v1alpha1
+kind: Template
+metadata:
+  name: $TEMPLATE_NAME
+spec:
+  name: $TEMPLATE_NAME
+  textPart: initial-text
+  subjectPart: initial-subject
+  htmlPart: "<h1>Initial HTML</h1>"

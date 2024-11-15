@@ -9,6 +9,13 @@ rules:
 - apiGroups:
   - ses.services.k8s.aws
   resources:
+  - configurationsets
+  - configurationseteventdestinations
+  - customverificationemailtemplates
+  - receiptfilters
+  - receiptrules
+  - receiptrulesets
+  - templates
   verbs:
   - get
   - list

@@ -1,0 +1,322 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.16.2
+  name: receiptrules.ses.services.k8s.aws
+spec:
+  group: ses.services.k8s.aws
+  names:
+    kind: ReceiptRule
+    listKind: ReceiptRuleList
+    plural: receiptrules
+    singular: receiptrule
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ReceiptRule is the Schema for the ReceiptRules API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              ReceiptRuleSpec defines the desired state of ReceiptRule.
+
+              Receipt rules enable you to specify which actions Amazon SES should take
+              when it receives mail on behalf of one or more email addresses or domains
+              that you own.
+
+              Each receipt rule defines a set of email addresses or domains that it applies
+              to. If the email addresses or domains match at least one recipient address
+              of the message, Amazon SES executes all of the receipt rule's actions on
+              the message.
+
+              For information about setting up receipt rules, see the Amazon SES Developer
+              Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-receipt-rules-console-walkthrough.html).
+            properties:
+              after:
+                description: |-
+                  The name of an existing rule after which the new rule is placed. If this
+                  parameter is null, the new rule is inserted at the beginning of the rule
+                  list.
+                type: string
+              rule:
+                description: |-
+                  A data structure that contains the specified rule's name, actions, recipients,
+                  domains, enabled status, scan status, and TLS policy.
+                properties:
+                  actions:
+                    items:
+                      description: |-
+                        An action that Amazon SES can take when it receives an email on behalf of
+                        one or more email addresses or domains that you own. An instance of this
+                        data type can represent only one action.
+
+                        For information about setting up receipt rules, see the Amazon SES Developer
+                        Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-receipt-rules-console-walkthrough.html).
+                      properties:
+                        addHeaderAction:
+                          description: |-
+                            When included in a receipt rule, this action adds a header to the received
+                            email.
+
+                            For information about adding a header using a receipt rule, see the Amazon
+                            SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-action-add-header.html).
+                          properties:
+                            headerName:
+                              type: string
+                            headerValue:
+                              type: string
+                          type: object
+                        bounceAction:
+                          description: |-
+                            When included in a receipt rule, this action rejects the received email by
+                            returning a bounce response to the sender and, optionally, publishes a notification
+                            to Amazon Simple Notification Service (Amazon SNS).
+
+                            For information about sending a bounce message in response to a received
+                            email, see the Amazon SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-action-bounce.html).
+                          properties:
+                            message:
+                              type: string
+                            sender:
+                              type: string
+                            smtpReplyCode:
+                              type: string
+                            statusCode:
+                              type: string
+                            topicARN:
+                              type: string
+                          type: object
+                        lambdaAction:
+                          description: |-
+                            When included in a receipt rule, this action calls an Amazon Web Services
+                            Lambda function and, optionally, publishes a notification to Amazon Simple
+                            Notification Service (Amazon SNS).
+
+                            To enable Amazon SES to call your Amazon Web Services Lambda function or
+                            to publish to an Amazon SNS topic of another account, Amazon SES must have
+                            permission to access those resources. For information about giving permissions,
+                            see the Amazon SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-permissions.html).
+
+                            For information about using Amazon Web Services Lambda actions in receipt
+                            rules, see the Amazon SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-action-lambda.html).
+                          properties:
+                            functionARN:
+                              type: string
+                            invocationType:
+                              type: string
+                            topicARN:
+                              type: string
+                          type: object
+                        s3Action:
+                          description: |-
+                            When included in a receipt rule, this action saves the received message to
+                            an Amazon Simple Storage Service (Amazon S3) bucket and, optionally, publishes
+                            a notification to Amazon Simple Notification Service (Amazon SNS).
+
+                            To enable Amazon SES to write emails to your Amazon S3 bucket, use an Amazon
+                            Web Services KMS key to encrypt your emails, or publish to an Amazon SNS
+                            topic of another account, Amazon SES must have permission to access those
+                            resources. For information about granting permissions, see the Amazon SES
+                            Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-permissions.html).
+
+                            When you save your emails to an Amazon S3 bucket, the maximum email size
+                            (including headers) is 40 MB. Emails larger than that bounces.
+
+                            For information about specifying Amazon S3 actions in receipt rules, see
+                            the Amazon SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-action-s3.html).
+                          properties:
+                            bucketName:
+                              type: string
+                            kmsKeyARN:
+                              type: string
+                            objectKeyPrefix:
+                              type: string
+                            topicARN:
+                              type: string
+                          type: object
+                        snsAction:
+                          description: |-
+                            When included in a receipt rule, this action publishes a notification to
+                            Amazon Simple Notification Service (Amazon SNS). This action includes a complete
+                            copy of the email content in the Amazon SNS notifications. Amazon SNS notifications
+                            for all other actions simply provide information about the email. They do
+                            not include the email content itself.
+
+                            If you own the Amazon SNS topic, you don't need to do anything to give Amazon
+                            SES permission to publish emails to it. However, if you don't own the Amazon
+                            SNS topic, you need to attach a policy to the topic to give Amazon SES permissions
+                            to access it. For information about giving permissions, see the Amazon SES
+                            Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-permissions.html).
+
+                            You can only publish emails that are 150 KB or less (including the header)
+                            to Amazon SNS. Larger emails bounce. If you anticipate emails larger than
+                            150 KB, use the S3 action instead.
+
+                            For information about using a receipt rule to publish an Amazon SNS notification,
+                            see the Amazon SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-action-sns.html).
+                          properties:
+                            encoding:
+                              type: string
+                            topicARN:
+                              type: string
+                          type: object
+                        stopAction:
+                          description: |-
+                            When included in a receipt rule, this action terminates the evaluation of
+                            the receipt rule set and, optionally, publishes a notification to Amazon
+                            Simple Notification Service (Amazon SNS).
+
+                            For information about setting a stop action in a receipt rule, see the Amazon
+                            SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-action-stop.html).
+                          properties:
+                            scope:
+                              type: string
+                            topicARN:
+                              type: string
+                          type: object
+                        workmailAction:
+                          description: |-
+                            When included in a receipt rule, this action calls Amazon WorkMail and, optionally,
+                            publishes a notification to Amazon Simple Notification Service (Amazon SNS).
+                            It usually isn't necessary to set this up manually, because Amazon WorkMail
+                            adds the rule automatically during its setup procedure.
+
+                            For information using a receipt rule to call Amazon WorkMail, see the Amazon
+                            SES Developer Guide (https://docs.aws.amazon.com/ses/latest/dg/receiving-email-action-workmail.html).
+                          properties:
+                            organizationARN:
+                              type: string
+                            topicARN:
+                              type: string
+                          type: object
+                      type: object
+                    type: array
+                  enabled:
+                    type: boolean
+                  name:
+                    type: string
+                  recipients:
+                    items:
+                      type: string
+                    type: array
+                  scanEnabled:
+                    type: boolean
+                  tlsPolicy:
+                    type: string
+                type: object
+              ruleSetName:
+                description: The name of the rule set where the receipt rule is added.
+                type: string
+              ruleSetRef:
+                description: "AWSResourceReferenceWrapper provides a wrapper around
+                  *AWSResourceReference\ntype to provide more user friendly syntax
+                  for references using 'from' field\nEx:\nAPIIDRef:\n\n\tfrom:\n\t
+                  \ name: my-api"
+                properties:
+                  from:
+                    description: |-
+                      AWSResourceReference provides all the values necessary to reference another
+                      k8s resource for finding the identifier(Id/ARN/Name)
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    type: object
+                type: object
+            required:
+            - rule
+            type: object
+          status:
+            description: ReceiptRuleStatus defines the observed state of ReceiptRule
+            properties:
+              ackResourceMetadata:
+                description: |-
+                  All CRs managed by ACK have a common `Status.ACKResourceMetadata` member
+                  that is used to contain resource sync state, account ownership,
+                  constructed ARN for the resource
+                properties:
+                  arn:
+                    description: |-
+                      ARN is the Amazon Resource Name for the resource. This is a
+                      globally-unique identifier and is set only by the ACK service controller
+                      once the controller has orchestrated the creation of the resource OR
+                      when it has verified that an "adopted" resource (a resource where the
+                      ARN annotation was set by the Kubernetes user on the CR) exists and
+                      matches the supplied CR's Spec field values.
+                      https://github.com/aws/aws-controllers-k8s/issues/270
+                    type: string
+                  ownerAccountID:
+                    description: |-
+                      OwnerAccountID is the AWS Account ID of the account that owns the
+                      backend AWS service API resource.
+                    type: string
+                  region:
+                    description: Region is the AWS region in which the resource exists
+                      or will exist.
+                    type: string
+                required:
+                - ownerAccountID
+                - region
+                type: object
+              conditions:
+                description: |-
+                  All CRS managed by ACK have a common `Status.Conditions` member that
+                  contains a collection of `ackv1alpha1.Condition` objects that describe
+                  the various terminal states of the CR and its backend AWS service API
+                  resource
+                items:
+                  description: |-
+                    Condition is the common struct used by all CRDs managed by ACK service
+                    controllers to indicate terminal states  of the CR and its backend AWS
+                    service API resource
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A human readable message indicating details about
+                        the transition.
+                      type: string
+                    reason:
+                      description: The reason for the condition's last transition.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type is the type of the Condition
+                      type: string
+                  required:
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

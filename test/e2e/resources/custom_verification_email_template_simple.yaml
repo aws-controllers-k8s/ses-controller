@@ -1,0 +1,13 @@
+apiVersion: ses.services.k8s.aws/v1alpha1
+kind: CustomVerificationEmailTemplate
+metadata:
+  name: $CUSTOM_VERIFICATION_EMAIL_TEMPLATE_NAME
+spec:
+  templateRef:
+    from:
+      name: $TEMPLATE_REF_NAME
+  templateSubject: template-subject
+  failureRedirectionURL: https://example.com
+  fromEmailAddress: todo@todo.com
+  successRedirectionURL: https://example.com/test
+  templateContent: "Initial template content"

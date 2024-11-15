@@ -1,0 +1,16 @@
+apiVersion: ses.services.k8s.aws/v1alpha1
+kind: ReceiptRule
+metadata:
+  name: $RECEIPT_RULE_NAME
+spec:
+  ruleSetRef:
+    from:
+      name: $RULE_SET_REF_NAME
+  rule:
+    enabled: true
+    name: $RECEIPT_RULE_NAME
+    recipients:
+      - example@example.com
+      - example2@example.com
+    scanEnabled: false
+    tlsPolicy: Require

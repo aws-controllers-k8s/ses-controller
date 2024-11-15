@@ -24,6 +24,7 @@ import (
 	acktypes "github.com/aws-controllers-k8s/runtime/pkg/types"
 	ackrtutil "github.com/aws-controllers-k8s/runtime/pkg/util"
 	ackrtwebhook "github.com/aws-controllers-k8s/runtime/pkg/webhook"
+	snsapitypes "github.com/aws-controllers-k8s/sns-controller/apis/v1alpha1"
 	flag "github.com/spf13/pflag"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -38,6 +39,14 @@ import (
 	svctypes "github.com/aws-controllers-k8s/ses-controller/apis/v1alpha1"
 	svcresource "github.com/aws-controllers-k8s/ses-controller/pkg/resource"
 	svcsdk "github.com/aws/aws-sdk-go/service/ses"
+
+	_ "github.com/aws-controllers-k8s/ses-controller/pkg/resource/configuration_set"
+	_ "github.com/aws-controllers-k8s/ses-controller/pkg/resource/configuration_set_event_destination"
+	_ "github.com/aws-controllers-k8s/ses-controller/pkg/resource/custom_verification_email_template"
+	_ "github.com/aws-controllers-k8s/ses-controller/pkg/resource/receipt_filter"
+	_ "github.com/aws-controllers-k8s/ses-controller/pkg/resource/receipt_rule"
+	_ "github.com/aws-controllers-k8s/ses-controller/pkg/resource/receipt_rule_set"
+	_ "github.com/aws-controllers-k8s/ses-controller/pkg/resource/template"
 
 	"github.com/aws-controllers-k8s/ses-controller/pkg/version"
 )
@@ -55,6 +64,7 @@ func init() {
 
 	_ = svctypes.AddToScheme(scheme)
 	_ = ackv1alpha1.AddToScheme(scheme)
+	_ = snsapitypes.AddToScheme(scheme)
 }
 
 func main() {

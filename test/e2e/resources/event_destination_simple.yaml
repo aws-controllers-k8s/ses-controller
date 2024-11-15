@@ -1,0 +1,16 @@
+apiVersion: ses.services.k8s.aws/v1alpha1
+kind: ConfigurationSetEventDestination
+metadata:
+  name: $EVENT_DESTINATION_NAME
+spec:
+  configurationSetRef:
+    from:
+      name: $CONFIGURATION_SET_REF_NAME
+  eventDestination:
+    name: $EVENT_DESTINATION_NAME
+    matchingEventTypes:
+      - send
+      - reject
+    enabled: false
+    snsDestination:
+      topicARN: $SNS_TOPIC_ARN

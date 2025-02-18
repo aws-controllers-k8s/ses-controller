@@ -174,7 +174,7 @@ func (rm *resourceManager) sdkUpdate(
 	latest *resource,
 	delta *ackcompare.Delta,
 ) (*resource, error) {
-	return rm.customUpdate(ctx, desired, latest, delta)
+	return nil, ackerr.NewTerminalError(ackerr.NotImplemented)
 }
 
 // sdkDelete deletes the supplied resource in the backend AWS service API
